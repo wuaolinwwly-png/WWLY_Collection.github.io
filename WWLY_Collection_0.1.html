@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="description" content="张三的作品集 — 产品设计师 & 前端开发者" />
+<title>张三 · 作品集</title>
+<style>
+  /* ========== 基础变量 ========== */
+  :root{
+    --bg:#0a0a0f;
+    --card:#16161f;
+    --text:#f2f2f7;
+    --muted:#9595a8;
+    --accent:#7c5cff;
+    --accent-2:#00d4ff;
+    --border:rgba(255,255,255,.08);
+    --radius:18px;
+    --font: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+            "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", sans-serif;
+  }
+
+  *,*::before,*::after{ box-sizing:border-box; }
+
+  html{ scroll-behavior:smooth; }
+
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:var(--font);
+    line-height:1.7;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+
+  ::selection{ background:var(--accent); color:#fff; }
+
+  ::-webkit-scrollbar{ width:10px; }
+  ::-webkit-scrollbar-track{ background:#0a0a0f; }
+  ::-webkit-scrollbar-thumb{
+    background:#2a2a38; border-radius:999px; border:2px solid #0a0a0f;
+  }
+  ::-webkit-scrollbar-thumb:hover{ background:#3c3c52; }
+
+  img{ max-width:100%; display:block; }
+  a{ color:inherit; }
+
+  .container{
+    width:min(1140px, 100% - 2.5rem);
+    margin-inline:auto;
+  }
+
+  section{ scroll-margin-top:80px; }
+
+  /* ========== 导航 ========== */
+  .nav{
+    position:fixed; top:0; left:0; right:0; z-index:100;
+    padding:1.1rem 0;
+    border-bottom:1px solid transparent;
+    transition:background .35s, backdrop-filter .35s, border-color .35s, padding .35s;
+  }
+  .nav.is-scrolled{
+    background:rgba(10,10,15,.75);
+    backdrop-filter:blur(14px);
+    -webkit-backdrop-filter:blur(14px);
+    border-bottom-color:var(--border);
+    padding:.7rem 0;
+  }
+  .nav__inner{ display:flex; align-items:center; justify-content:space-between; }
+
+  .logo{
+    font-weight:800; font-size:1.3rem; letter-spacing:-.02em;
+    text-decoration:none; color:var(--text);
+  }
+  .logo span{ color:var(--accent); }
+
+  .nav__links{
+    display:flex; gap:2.2rem; list-style:none; margin:0; padding:0;
+  }
+  .nav__links a{
+    position:relative; text-decoration:none; color:var(--muted);
+    font-size:.92rem; font-weight:500; transition:color .25s;
+  }
+  .nav__links a::after{
+    content:''; position:absolute; left:0; bottom:-6px;
+    width:0; height:1.5px; border-radius:2px;
+    background:linear-gradient(90deg,var(--accent),var(--accent-2));
+    transition:width .3s ease;
+  }
+  .nav__links a:hover{ color:var(--text); }
+  .nav__links a:hover::after{ width:100%; }
+
+  .nav__toggle{
+    display:none; flex-direction:column; gap:5px;
+    background:none; border:0; cursor:pointer; padding:8px; z-index:110;
+  }
+  .nav__toggle span{
+    display:block; width:22px; height:2px; border-radius:2px;
+    background:var(--text); transition:.3s;
+  }
+  .nav__toggle.is-open span:nth-child(1){ transform:translateY(7px) rotate(45deg); }
+  .nav__toggle.is-open span:nth-child(2){ opacity:0; }
+  .nav__toggle.is-open span:nth-child(3){ transform:translateY(-7px) rotate(-45deg); }
+
+  /* ========== Hero ========== */
+  .hero{
+    position:relative;
+    min-height:100vh;
+    min-height:100svh;
+    display:flex; align-items:center;
+    padding:9rem 0 5rem;
+    overflow:hidden;
+  }
+  .orb{
+    position:absolute; border-radius:50%;
+    filter:blur(90px); pointer-events:none; will-change:transform;
+  }
+  .orb--1{
+    width:520px; height:520px; top:-150px; left:-130px;
+    background:rgba(124,92,255,.35);
+    animation:drift 16s ease-in-out infinite;
+  }
+  .orb--2{
+    width:460px; height:460px; bottom:-170px; right:-110px;
+    background:rgba(0,212,255,.22);
+    animation:drift 21s ease-in-out infinite reverse;
+  }
+  @keyframes drift{
+    0%,100%{ transform:translate(0,0) scale(1); }
+    50%    { transform:translate(60px,-45px) scale(1.08); }
+  }
+
+  .hero__inner{ position:relative; z-index:1; }
+
+  .hero__eyebrow{
+    display:inline-flex; align-items:center; gap:.5rem;
+    font-size:.85rem; color:var(--muted);
+    border:1px solid var(--border);
+    background:rgba(255,255,255,.03);
+    padding:.4rem .95rem; border-radius:999px;
+    margin:0 0 1.6rem;
+  }
+
+  .hero__title{
+    margin:0 0 .4rem;
+    font-size:clamp(3rem, 9vw, 6.5rem);
+    line-height:1; font-weight:800; letter-spacing:-.04em;
+    background:linear-gradient(135deg,#ffffff 20%, #a99bff 60%, #5ce1ff);
+    -webkit-background-clip:text; background-clip:text;
+    color:transparent;
+  }
+
+  .hero__role{
+    margin:0 0 1.6rem;
+    font-size:clamp(1.1rem, 2.6vw, 1.55rem);
+    font-weight:500; color:var(--muted);
+  }
+  .hero__role span{ color:var(--accent); }
+
+  .hero__desc{
+    max-width:52ch; margin:0 0 2.6rem;
+    color:var(--muted); font-size:1.02rem;
+  }
+
+  .hero__actions{ display:flex; gap:1rem; flex-wrap:wrap; }
+
+  .hero__stats{
+    display:flex; gap:3.2rem; flex-wrap:wrap;
+    margin-top:4.5rem;
+  }
+  .stat b{
+    display:block; font-size:1.9rem; font-weight:800;
+    letter-spacing:-.02em; line-height:1.2;
+  }
+  .stat span{ font-size:.85rem; color:var(--muted); }
+
+  /* ========== 按钮 ========== */
+  .btn{
+    display:inline-flex; align-items:center; gap:.5rem;
+    padding:.85rem 1.7rem; border-radius:999px;
+    font-size:.95rem; font-weight:600; text-decoration:none;
+    border:1px solid transparent; cursor:pointer;
+    transition:transform .25s ease, box-shadow .25s ease,
+               background .25s ease, border-color .25s ease;
+  }
+  .btn--primary{
+    background:linear-gradient(135deg,var(--accent),var(--accent-2));
+    color:#08080c;
+    box-shadow:0 12px 32px -12px rgba(124,92,255,.75);
+  }
+  .btn--primary:hover{
+    transform:translateY(-2px);
+    box-shadow:0 18px 42px -14px rgba(124,92,255,.95);
+  }
+  .btn--ghost{
+    border-color:var(--border);
+    background:rgba(255,255,255,.03);
+    color:var(--text);
+  }
+  .btn--ghost:hover{
+    background:rgba(255,255,255,.08);
+    transform:translateY(-2px);
+  }
+
+  /* ========== 通用区块 ========== */
+  .section{ padding:7rem 0; }
+
+  .section__head{ margin-bottom:3.5rem; max-width:62ch; }
+  .section__num{
+    font-family:ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size:.78rem; letter-spacing:.18em; color:var(--accent);
+  }
+  .section__head h2{
+    margin:.6rem 0 .8rem;
+    font-size:clamp(1.9rem, 4vw, 2.75rem);
+    font-weight:800; letter-spacing:-.03em; line-height:1.15;
+  }
+  .section__head p{ margin:0; color:var(--muted); font-size:1rem; }
+
+  /* ========== 作品网格 ========== */
+  .work-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(300px, 1fr));
+    gap:1.6rem;
+  }
+
+  .card{
+    position:relative;
+    display:flex; flex-direction:column;
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    overflow:hidden;
+    text-decoration:none; color:inherit;
+    transition:transform .45s cubic-bezier(.2,.7,.2,1),
+               border-color .45s ease,
+               box-shadow .45s ease;
+  }
+  .card:hover{
+    transform:translateY(-6px);
+    border-color:rgba(124,92,255,.45);
+    box-shadow:0 26px 55px -28px rgba(0,0,0,.95);
+  }
+
+  .card__media{
+    position:relative;
+    aspect-ratio:16/10;
+    display:grid; place-items:center;
+    background:linear-gradient(135deg, var(--g1), var(--g2));
+    overflow:hidden;
+  }
+  .card__media::after{
+    content:''; position:absolute; inset:0;
+    background:radial-gradient(circle at 28% 18%, rgba(255,255,255,.35), transparent 58%);
+  }
+  .card__glyph{
+    position:relative; z-index:1;
+    font-size:3.4rem; line-height:1;
+    color:rgba(255,255,255,.92);
+    text-shadow:0 6px 18px rgba(0,0,0,.25);
+    transition:transform .55s cubic-bezier(.2,.7,.2,1);
+  }
+  .card:hover .card__glyph{ transform:scale(1.16) rotate(-7deg); }
+
+  .card__body{
+    display:flex; flex-direction:column; gap:.6rem;
+    padding:1.4rem 1.5rem 1.6rem; flex:1;
+  }
+  .card__body h3{
+    margin:0; font-size:1.15rem; font-weight:700; letter-spacing:-.01em;
+  }
+  .card__body p{
+    margin:0; color:var(--muted); font-size:.92rem; line-height:1.65;
+  }
+  .card__tags{
+    display:flex; flex-wrap:wrap; gap:.4rem;
+    margin-top:auto; padding-top:.6rem;
+  }
+  .card__tags span{
+    font-size:.74rem; color:#c9bcff;
+    background:rgba(124,92,255,.12);
+    border:1px solid rgba(124,92,255,.22);
+    padding:.2rem .65rem; border-radius:999px;
+  }
+
+  /* ========== 关于我 ========== */
+  .about{
+    display:grid;
+    grid-template-columns:0.85fr 1.4fr;
+    gap:4rem; align-items:center;
+  }
+  .about__avatar{
+    aspect-ratio:1; border-radius:26px;
+    display:grid; place-items:center;
+    font-size:5rem; font-weight:800;
+    color:rgba(255,255,255,.92);
+    background:linear-gradient(135deg, rgba(124,92,255,.85), rgba(0,212,255,.6));
+    box-shadow:0 34px 70px -34px rgba(124,92,255,.9);
+  }
+  .about__text h2{
+    margin:.6rem 0 1.2rem;
+    font-size:clamp(1.8rem, 3.4vw, 2.4rem);
+    font-weight:800; letter-spacing:-.03em;
+  }
+  .about__text p{ color:var(--muted); margin:0 0 1.1rem; }
+  .about__list{
+    list-style:none; margin:1.8rem 0 0; padding:0;
+    display:grid; gap:.7rem;
+  }
+  .about__list li{
+    display:flex; gap:.7rem; align-items:flex-start;
+    color:var(--muted); font-size:.94rem;
+  }
+  .about__list li::before{
+    content:'▹'; color:var(--accent); font-weight:700; line-height:1.7;
+  }
+
+  /* ========== 技能 ========== */
+  .skill-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));
+    gap:1.4rem;
+  }
+  .skill-card{
+    padding:1.8rem 1.6rem;
+    background:linear-gradient(180deg, rgba(255,255,255,.035), rgba(255,255,255,.012));
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    transition:border-color .35s, transform .35s;
+  }
+  .skill-card:hover{
+    border-color:rgba(124,92,255,.4);
+    transform:translateY(-4px);
+  }
+  .skill-card h3{
+    margin:0 0 1rem; font-size:1.05rem; font-weight:700;
+    display:flex; align-items:center; gap:.55rem;
+  }
+  .skill-card h3 i{
+    font-style:normal; font-size:1.15rem;
+  }
+  .skill-card ul{
+    list-style:none; margin:0; padding:0;
+    display:flex; flex-wrap:wrap; gap:.45rem;
+  }
+  .skill-card li{
+    font-size:.8rem; color:var(--muted);
+    border:1px solid var(--border);
+    padding:.25rem .7rem; border-radius:999px;
+    background:rgba(255,255,255,.02);
+  }
+
+  /* ========== 联系 ========== */
+  .contact{
+    position:relative;
+    padding:clamp(2.5rem, 6vw, 4.5rem);
+    border-radius:28px;
+    text-align:center;
+    overflow:hidden;
+    border:1px solid rgba(124,92,255,.28);
+    background:
+      radial-gradient(120% 130% at 50% 0%, rgba(124,92,255,.28), transparent 62%),
+      linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.01));
+  }
+  .contact h2{
+    margin:0 0 1rem;
+    font-size:clamp(1.8rem, 4vw, 2.8rem);
+    font-weight:800; letter-spacing:-.03em;
+  }
+  .contact p{
+    margin:0 auto 2.2rem; max-width:46ch; color:var(--muted);
+  }
+  .contact__links{
+    display:flex; justify-content:center; flex-wrap:wrap;
+    gap:.8rem; margin-top:2rem;
+  }
+  .contact__links a{
+    font-size:.88rem; color:var(--muted); text-decoration:none;
+    padding:.5rem 1.1rem; border-radius:999px;
+    border:1px solid var(--border);
+    background:rgba(255,255,255,.03);
+    transition:color .25s, border-color .25s, transform .25s;
+  }
+  .contact__links a:hover{
+    color:var(--text); border-color:rgba(124,92,255,.5);
+    transform:translateY(-2px);
+  }
+
+  /* ========== 页脚 ========== */
+  .footer{
+    padding:2.5rem 0 3rem;
+    border-top:1px solid var(--border);
+    color:var(--muted); font-size:.85rem;
+  }
+  .footer__inner{
+    display:flex; justify-content:space-between;
+    align-items:center; gap:1rem; flex-wrap:wrap;
+  }
+  .footer a{ color:var(--muted); text-decoration:none; }
+  .footer a:hover{ color:var(--text); }
+
+  /* ========== 滚动动画 ========== */
+  .reveal{
+    opacity:0;
+    transform:translateY(26px);
+    transition:opacity .8s cubic-bezier(.2,.7,.2,1),
+               transform .8s cubic-bezier(.2,.7,.2,1);
+  }
+  .reveal.is-visible{ opacity:1; transform:none; }
+
+  /* ========== 响应式 ========== */
+  @media (max-width: 860px){
+    .about{ grid-template-columns:1fr; gap:2.5rem; }
+    .about__avatar{ max-width:260px; }
+  }
+
+  @media (max-width: 760px){
+    .nav__toggle{ display:flex; }
+
+    .nav__links{
+      position:fixed; inset:0;
+      flex-direction:column; justify-content:center; align-items:center;
+      gap:2.2rem; font-size:1.4rem;
+      background:rgba(10,10,15,.97);
+      backdrop-filter:blur(20px);
+      -webkit-backdrop-filter:blur(20px);
+      opacity:0; pointer-events:none;
+      transition:opacity .3s ease;
+    }
+    .nav__links.is-open{ opacity:1; pointer-events:auto; }
+    .nav__links a{ font-size:1.35rem; }
+
+    .section{ padding:5rem 0; }
+    .hero{ padding:7.5rem 0 4rem; }
+    .hero__stats{ gap:2rem; margin-top:3.2rem; }
+    .stat b{ font-size:1.6rem; }
+  }
+
+  /* ========== 无障碍 ========== */
+  @media (prefers-reduced-motion: reduce){
+    *,*::before,*::after{
+      animation-duration:.001ms !important;
+      animation-iteration-count:1 !important;
+      transition-duration:.001ms !important;
+      scroll-behavior:auto !important;
+    }
+    .reveal{ opacity:1; transform:none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ 导航 ============ -->
+<nav class="nav" id="nav">
+  <div class="container nav__inner">
+    <a href="#top" class="logo">ZX<span>.</span></a>
+
+    <ul class="nav__links" id="navLinks">
+      <li><a href="#work">作品</a></li>
+      <li><a href="#about">关于</a></li>
+      <li><a href="#skills">技能</a></li>
+      <li><a href="#contact">联系</a></li>
+    </ul>
+
+    <button class="nav__toggle" id="navToggle" aria-label="打开菜单" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- ============ Hero ============ -->
+<header class="hero" id="top">
+  <div class="orb orb--1"></div>
+  <div class="orb orb--2"></div>
+
+  <div class="container hero__inner">
+    <p class="hero__eyebrow">👋 你好，我是</p>
+    <h1 class="hero__title">张三</h1>
+    <p class="hero__role">产品设计师 <span>/</span> 前端开发者</p>
+    <p class="hero__desc">
+      我专注于把复杂的想法变成简单、好用、好看的数字产品。
+      5 年来，我参与过从 0 到 1 的产品设计与前端实现，
+      喜欢在像素和代码之间来回打磨。
+    </p>
+
+    <div class="hero__actions">
+      <a href="#work" class="btn btn--primary">查看作品 →</a>
+      <a href="#contact" class="btn btn--ghost">联系我</a>
+    </div>
+
+    <div class="hero__stats">
+      <div class="stat"><b>5+</b><span>年经验</span></div>
+      <div class="stat"><b>30+</b><span>交付项目</span></div>
+      <div class="stat"><b>12</b><span>合作客户</span></div>
+    </div>
+  </div>
+</header>
+
+<!-- ============ 作品 ============ -->
+<section class="section" id="work">
+  <div class="container">
+    <div class="section__head reveal">
+      <span class="section__num">01 — WORK</span>
+      <h2>精选作品</h2>
+      <p>挑了几个我自己比较满意的项目，涵盖 Web 应用、品牌官网与设计系统。</p>
+    </div>
+
+    <div class="work-grid">
+      <a href="#" class="card reveal">
+        <div class="card__media" style="--g1:#7c5cff; --g2:#00d4ff">
+          <span class="card__glyph">✦</span>
+        </div>
+        <div class="card__body">
+          <h3>Nova 数据看板</h3>
+          <p>为 SaaS 团队设计的可视化分析平台，支持实时数据流与自定义图表。</p>
+          <div class="card__tags">
+            <span>React</span><span>TypeScript</span><span>D3.js</span>
+          </div>
+        </div>
+      </a>
+
+      <a href="#" class="card reveal">
+        <div class="card__media" style="--g1:#ff6b9d; --g2:#ffb86b">
+          <span class="card__glyph">◐</span>
+        </div>
+        <div class="card__body">
+          <h3>Bloom 电商小程序</h3>
+          <p>轻奢花艺品牌的线上商城，从视觉规范到前端实现全流程负责。</p>
+          <div class="card__tags">
+            <span>Vue 3</span><span>微信小程序</span><span>Figma</span>
+          </div>
+        </div>
+      </a>
+
+      <a href="#" class="card reveal">
+        <div class="card__media" style="--g1:#00d4ff; --g2:#3ddc97">
+          <span class="card__glyph">◇</span>
+        </div>
+        <div class="card__body">
+          <h3>Pulse 健康 App</h3>
+          <p>面向运动人群的健康追踪应用，重新设计了数据录入与反馈动效。</p>
+          <div class="card__tags">
+            <span>UI/UX</span><span>动效设计</span><span>原型</span>
+          </div>
+        </div>
+      </a>
+
+      <a href="#" class="card reveal">
+        <div class="card__media" style="--g1:#f7b731; --g2:#eb3b5a">
+          <span class="card__glyph">△</span>
+        </div>
+        <div class="card__body">
+          <h3>Atlas 设计系统</h3>
+          <p>为公司内部 6 条产品线搭建的统一设计系统，含 80+ 组件与文档站。</p>
+          <div class="card__tags">
+            <span>Design Token</span><span>Storybook</span>
+          </div>
+        </div>
+      </a>
+
+      <a href="#" class="card reveal">
+        <div class="card__media" style="--g1:#8854d0; --g2:#3867d6">
+          <span class="card__glyph">⌘</span>
+        </div>
+        <div class="card__body">
+          <h3>Orbit 团队协作工具</h3>
+          <p>一个把任务、文档和日程整合在一起的轻量协作空间，主打「零学习成本」。</p>
+          <div class="card__tags">
+            <span>Next.js</span><span>Prisma</span><span>PostgreSQL</span>
+          </div>
+        </div>
+      </a>
+
+      <a href="#" class="card reveal">
+        <div class="card__media" style="--g1:#20bf6b; --g2:#0fb9b1">
+          <span class="card__glyph">✧</span>
+        </div>
+        <div class="card__body">
+          <h3>Lumen 品牌官网</h3>
+          <p>照明品牌的官网改版，用滚动叙事和微交互讲好一个关于「光」的故事。</p>
+          <div class="card__tags">
+            <span>GSAP</span><span>响应式</span><span>SEO</span>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 关于 ============ -->
+<section class="section" id="about">
+  <div class="container about">
+    <div class="reveal">
+      <div class="about__avatar">张</div>
+    </div>
+
+    <div class="about__text reveal">
+      <span class="section__num">02 — ABOUT</span>
+      <h2>关于我</h2>
+      <p>
+        我是一个横跨设计与开发的「两栖」选手。做过 3 年 UI 设计师，
+        又花了 2 年把前端技能点满，所以我很清楚一个想法从草图到上线要经过多少坑。
+      </p>
+      <p>
+        工作中我喜欢先问「为什么」，再讨论「怎么做」。
+        我相信好的产品不是堆功能，而是把一件事做到极致简单。
+      </p>
+
+      <ul class="about__list">
+        <li>擅长从 0 到 1 的产品设计与落地</li>
+        <li>熟悉设计规范、组件库与前端工程化</li>
+        <li>能独立完成从原型到上线的完整链路</li>
+        <li>远程 / 混合办公均可，习惯异步协作</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 技能 ============ -->
+<section class="section" id="skills">
+  <div class="container">
+    <div class="section__head reveal">
+      <span class="section__num">03 — SKILLS</span>
+      <h2>技能栈</h2>
+      <p>下面这些是我日常用得最多的工具和技术，也是我能独立完成项目的底气。</p>
+    </div>
+
+    <div class="skill-grid">
+      <div class="skill-card reveal">
+        <h3><i>🎨</i> 设计</h3>
+        <ul>
+          <li>Figma</li><li>Sketch</li><li>Photoshop</li>
+          <li>Illustrator</li><li>设计系统</li><li>原型动效</li>
+        </ul>
+      </div>
+
+      <div class="skill-card reveal">
+        <h3><i>💻</i> 前端</h3>
+        <ul>
+          <li>HTML / CSS</li><li>JavaScript</li><li>TypeScript</li>
+          <li>React</li><li>Vue 3</li><li>Next.js</li><li>Tailwind</li>
+        </ul>
+      </div>
+
+      <div class="skill-card reveal">
+        <h3><i>🧩</i> 体验</h3>
+        <ul>
+          <li>用户访谈</li><li>信息架构</li><li>交互设计</li>
+          <li>可用性测试</li><li>数据埋点</li>
+        </ul>
+      </div>
+
+      <div class="skill-card reveal">
+        <h3><i>⚙️</i> 工程</h3>
+        <ul>
+          <li>Git</li><li>Vite</li><li>Node.js</li>
+          <li>Vercel</li><li>性能优化</li><li>CI/CD</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 联系 ============ -->
+<section class="section" id="contact">
+  <div class="container">
+    <div class="contact reveal">
+      <h2>一起做点有趣的东西</h2>
+      <p>
+        如果你有项目想聊，或者只是想打个招呼，都欢迎随时联系我。
+        我通常会在 24 小时内回复。
+      </p>
+
+      <a href="mailto:hello@example.com" class="btn btn--primary">hello@example.com</a>
+
+      <div class="contact__links">
+        <a href="#" target="_blank" rel="noopener">GitHub</a>
+        <a href="#" target="_blank" rel="noopener">Dribbble</a>
+        <a href="#" target="_blank" rel="noopener">即刻</a>
+        <a href="#" target="_blank" rel="noopener">小红书</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 页脚 ============ -->
+<footer class="footer">
+  <div class="container footer__inner">
+    <span>© <span id="year"></span> 张三 · 用心设计与编码</span>
+    <a href="#top">回到顶部 ↑</a>
+  </div>
+</footer>
+
+<script>
+  /* ---------- 导航滚动状态 ---------- */
+  const nav = document.getElementById('nav');
+  const onScroll = () => {
+    nav.classList.toggle('is-scrolled', window.scrollY > 20);
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  /* ---------- 移动端菜单 ---------- */
+  const navToggle = document.getElementById('navToggle');
+  const navLinks  = document.getElementById('navLinks');
+
+  navToggle.addEventListener('click', () => {
+    const open = navLinks.classList.toggle('is-open');
+    navToggle.classList.toggle('is-open', open);
+    navToggle.setAttribute('aria-expanded', String(open));
+    document.body.style.overflow = open ? 'hidden' : '';
+  });
+
+  // 点击链接后关闭菜单
+  navLinks.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', () => {
+      navLinks.classList.remove('is-open');
+      navToggle.classList.remove('is-open');
+      navToggle.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+    });
+  });
+
+  /* ---------- 滚动出现动画 ---------- */
+  const revealEls = document.querySelectorAll('.reveal');
+
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
+
+    revealEls.forEach(el => io.observe(el));
+  } else {
+    revealEls.forEach(el => el.classList.add('is-visible'));
+  }
+
+  /* ---------- 作品卡片错峰入场 ---------- */
+  document.querySelectorAll('.work-grid').forEach(grid => {
+    Array.from(grid.children).forEach((el, i) => {
+      el.style.transitionDelay = (i % 3) * 90 + 'ms';
+    });
+  });
+
+  /* ---------- 页脚年份 ---------- */
+  document.getElementById('year').textContent = new Date().getFullYear();
+</script>
+
+</body>
+</html>
